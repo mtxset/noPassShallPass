@@ -1,0 +1,62 @@
+<html>
+    <img id="show_qr">
+    <br>
+    <button onclick="checkIfLoggedIn()">Check Login</button>
+    <script>
+    /**
+     * GET contents of a URL
+     * @access private
+     * @param {string} url - url to get
+     * @param {function} error - function to call if there is an error
+     * @param {function} callback - function to call if success
+     * @returns {void}
+     */
+    function httpGet(url, error, callback, body) {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', url);
+        //xhr.withCredentials = true;
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        // if (body != null)
+        //     xhr.setRequestHeader('Content-Length', body.length);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200 || (xhr.status === 0 && xhr.responseText !== '')) {
+                    callback({
+                        url: url,
+                        status: 200,
+                        body: xhr.responseText || ''
+                    });
+                }
+                else {
+                    error({
+                        url: url,
+                        status: xhr.status,
+                        body: xhr.responseText || ''
+                    });
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(body));
+    }
+
+    var unique_id = 0;
+
+    httpGet("http://localhost:666/requestlogin", (error) => { console.error(error); }, (data) => {
+        const response = JSON.parse(data.body);
+        unique_id = response.Id;
+        document.getElementById("show_qr").src = "data:image/jpg;base64," + response.QrCode;
+        // we should connect again and wait till we are logged in, if we get disconnect, for security reasons (overtake, sniffing) we need to repeat process but because it's a simple sync server we can't
+    });
+
+    function checkIfLoggedIn() {
+        const body = { Id: unique_id };
+        httpGet("http://localhost:666/checklogin", (error) => { console.error(error); }, (data) => {
+            console.log(data.body);
+        }, body);
+    }
+    </script>
+</html>
