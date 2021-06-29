@@ -25,3 +25,6 @@
 1. Frontend sends /requestlogin which will return qr and temporary unique session id
 2. Backend registers that session id so upon request it knows which one to authenticate
 3. Frontend sends /checksession with that temporary unique id, if login happened successfully it will return token (like json web token)
+
+# Troubleshooting
+Cleartext HTTP traffic to 192.168.0.104 not permitted - change <domain includeSubdomains="true"> your IP </domain> in network_security_config.xml 

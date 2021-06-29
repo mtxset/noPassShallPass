@@ -93,7 +93,9 @@ namespace backend
                         } break;
                         case "/login":
                         {
+                            Console.Write("Trying to log in..");
                             responseString = tryLogin(context.Request.InputStream, userStatuses);
+                            Console.WriteLine(responseString);
                         } break;
                         case "/checklogin":
                         {
@@ -142,7 +144,7 @@ namespace backend
                 userStatuses.Add(new UserStatus {
                     UniqueId = loginRequestDto.Id,
                     LoggedIn = true,
-                    Token = "UniqueToken"
+                    Token = "BzKRfYLRcU69qFYQFpm4Sw"
                 });
                 return "Success";
             }
@@ -154,7 +156,7 @@ namespace backend
         {
             var loginQrDto = new LoginQrDto 
             {
-                HttpAddress = "http://192.168.0.103:666/login",
+                HttpAddress = "http://192.168.0.104:666/login",
                 Id = uniqueId.ToString()
             };
 
